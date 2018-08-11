@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ $# -ne 2 ]]
+then
+	echo "Usage: generate MIN MAX"
+	echo " Generates list of api:A-B items between MIN and MAX with 1000 IDs per item"
+	echo " The difference between MIN and MAX must satisfy n * 1000 - 1"
+	exit 1
+fi
+
+min="$1"
+max="$2"
+
+if [[ $(((${max} - ${min} + 1) % 1000)) -ne 0 || ${min} -lt 0 || ${max} -lt 0 ]]
+then
+	echo "Invalid values for MIN and MAX"
+	exit 1
+fi
+
+for ((i=0; min + i * 1000 < max; ++i))
+do
+	echo "api:$((${min} + ${i} * 1000))-$((${min} + ${i} * 1000 + 999))"
+done
